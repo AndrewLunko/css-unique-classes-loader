@@ -1,7 +1,6 @@
 const csstree = require('css-tree')
 const crypto = require('crypto')
-const { getOptions } = require('loader-utils')
-const validateOptions = require('schema-utils')
+const { validate } = require('schema-utils')
 const { name } = require('./package.json')
 
 const schema = {
@@ -41,8 +40,8 @@ const createUniqueClassNames = async function (css, uniqueFunction) {
 }
 
 module.exports = async function (source) {
-  const options = getOptions(this)
-  validateOptions(schema, options, name)
+  const options = this.getOptions()
+  validate(schema, options, { name })
   const uniqueFn = options.generateUniqueName || defaultIdGenerator
   const { raw, map } = await createUniqueClassNames(source, uniqueFn)
   return 'export default {\nraw: ' + JSON.stringify(raw) + ',\nmap:' + JSON.stringify(map) + '}'
